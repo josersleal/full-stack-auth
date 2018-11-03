@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 
-export interface RegisterProps {}
 
-export default class Register extends Component<RegisterProps, any> {
+export default class Register extends Component<{}, any> {
   constructor(props: any) {
     super(props)
     this.state = {
