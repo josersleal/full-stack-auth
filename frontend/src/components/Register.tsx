@@ -1,35 +1,42 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { registerUser } from '../actions/authentication';
 
-
-export default class Register extends Component<{}, any> {
+//#region
+interface IRegisterProps {
+  errors: Array<String>;
+  registerUser(user: any, history: any): void;
+  history:any
+}
+//#endregion
+public class Register extends Component<IRegisterProps, any> {
   constructor(props: any) {
-    super(props)
+    super(props);
     this.state = {
       name: '',
       password: '',
       password_confirm: '',
       errors: {}
-    }
-    this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    };
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleInputChange = (e: any) => {
     this.setState({
       [e.target.name]: e.target.value
-    })
-  }
+    });
+  };
 
   handleSubmit = (e: any) => {
-    e.preventDefault
+    e.preventDefault;
     const user = {
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
       password_confirm: this.state.password_confirm
-    }
-    console.log(user)
-  }
+    };
+    this.props.registerUser(user, this.props.history);
+  };
 
   public render() {
     return (
@@ -38,7 +45,7 @@ export default class Register extends Component<{}, any> {
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             {/* <label for="" /> */}
-            <input type="text" name="name" className="form-control" placeholder="Name" aria-describedby="helpName" />>
+            <input type="text" name="name" className="form-control" placeholder="Name" aria-describedby="helpName" />
             <small id="helpName" className="text-muted">
               Help text for name
             </small>
@@ -81,6 +88,12 @@ export default class Register extends Component<{}, any> {
           </div>
         </form>
       </div>
-    )
+    );
   }
+  const mapStateToProps = (state:IRegisterProps) => ({
+    errors: state.errors
+  })
+  
+
+  export default  connect(mapStateToProps, {registerUser})(withRouter(Register))
 }
