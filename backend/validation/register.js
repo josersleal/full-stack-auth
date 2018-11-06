@@ -1,17 +1,21 @@
 const Validator = require('validator')
-const isEmptyOrNull = require('./empty-or-null')
+const isEmpty = require('./is-empty')
 
-module.exports = function validateRegisterrInput (data) {
+module.exports = function validateRegisterInput (data) {
   let errors = {}
-
-  data.name = !isEmptyOrNull(data.name) ? data.name : ''
-  data.email = !isEmptyOrNull(data.email) ? data.email : ''
-  data.password = !isEmptyOrNull(data.password) ? data.password : ''
-  data.password_confirm = !isEmptyOrNull(data.password_confirm) ? data.password_confirm : ''
+  data.name = !isEmpty(data.name) ? data.name : ''
+  data.email = !isEmpty(data.email) ? data.email : ''
+  data.password = !isEmpty(data.password) ? data.password : ''
+  data.password_confirm = !isEmpty(data.password_confirm) ? data.password_confirm : ''
 
   if (!Validator.isLength(data.name, { min: 2, max: 30 })) {
     errors.name = 'Name must be between 2 to 30 chars'
   }
+
+  if (Validator.isEmpty(data.name)) {
+    errors.name = 'Name field is required'
+  }
+
   if (!Validator.isEmail(data.email)) {
     errors.email = 'Email is invalid'
   }
@@ -39,8 +43,9 @@ module.exports = function validateRegisterrInput (data) {
   if (Validator.isEmpty(data.password_confirm)) {
     errors.password_confirm = 'Password is required'
   }
+
   return {
     errors,
-    isValid: isEmptyOrNull(errors)
+    isValid: isEmpty(errors)
   }
 }
