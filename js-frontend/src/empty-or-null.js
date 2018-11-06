@@ -7,4 +7,4 @@ const isEmptyOrNull = (value) => {
   )
 }
 
-module.export = isEmptyOrNull
+module.export = { isEmptyOrNull }
