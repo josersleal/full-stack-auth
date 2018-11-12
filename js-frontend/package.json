@@ -14,14 +14,15 @@
     "react-scripts": "2.1.1",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "snazzy": "^8.0.0"
+    "snazzy": "^8.0.0",
+    "standard": "^12.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "standard --fix | snazzy"
+    "lint": "standard | snazzy"
   },
   "eslintConfig": {
     "extends": "react-app"
