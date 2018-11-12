@@ -1,4 +1,4 @@
-const isEmptyOrNull = (value) => {
+const isEmpty = (value) => {
   return (
     value === undefined ||
     value === null ||
@@ -6,5 +6,4 @@ const isEmptyOrNull = (value) => {
     (typeof value === 'string' && value.trim().length === 0)
   )
 }
-
-module.export = { isEmptyOrNull }
+export default isEmpty
