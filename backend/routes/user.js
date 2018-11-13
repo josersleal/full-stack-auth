@@ -16,43 +16,42 @@ router.post('/register', (req, res) => {
   }
   User.findOne({
     email: req.body.email
+  }).then((user) => {
+    if (user) {
+      return res.status(400).json({
+        email: 'Email allready exists!'
+      })
+    } else {
+      const avatar = gravatar.url(req.body.email, {
+        s: '200',
+        r: 'pg',
+        d: 'mm'
+      })
+      const newUser = new User({
+        name: req.body.name,
+        password: req.body.password,
+        email: req.body.email,
+        avatar
+      })
+      bcrypt.genSalt(10, (err, salt) => {
+        if (err) {
+          console.error('error :', err)
+        } else {
+          bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) {
+              console.error('error :', err)
+              res.json(err)
+            } else {
+              newUser.password = hash
+              newUser.save().then((user) => {
+                res.json(user)
+              })
+            }
+          })
+        }
+      })
+    }
   })
-    .exec()
-    .then((user) => {
-      if (user) {
-        return req.status(400).json({
-          email: 'Email allready exists!'
-        })
-      } else {
-        const avatar = gravatar.url(req.body.email, {
-          s: '200',
-          r: 'pg',
-          d: 'mm'
-        })
-        const newUser = new User({
-          name: req.body.name,
-          password: req.body.password,
-          email: req.body.email,
-          avatar
-        })
-        bcrypt.genSalt(10, (err, salt) => {
-          if (err) {
-            console.log('error :', err)
-          } else {
-            bcrypt.hash(newUser.password, salt, (err, hash) => {
-              if (err) {
-                console.log('error :', err)
-              } else {
-                newUser.password = hash
-                newUser.save().then((user) => {
-                  res.json(user)
-                })
-              }
-            })
-          }
-        })
-      }
-    })
 })
 router.post('/login', (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body)
@@ -68,7 +67,7 @@ router.post('/login', (req, res) => {
   }).then((user) => {
     if (!user) {
       errors.email = 'User not found'
-      return req.status(404).json(errors)
+      return res.status(404).json(errors)
     } else {
       bcrypt.compare(password, user.password).then((isMatch) => {
         if (isMatch) {
@@ -81,11 +80,11 @@ router.post('/login', (req, res) => {
             payload,
             'secret',
             {
-              expires: 3600
+              expiresIn: 3600
             },
             (err, token) => {
               if (err) {
-                console.log('err :', err)
+                console.error('err :', err)
               } else {
                 res.json({
                   sucess: true,
